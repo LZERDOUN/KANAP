@@ -60,3 +60,57 @@ listeQuantite.addEventListener("change", function (ajouteUnArticle) {
   quantiteProduit = ajouteUnArticle.target.value;
   productId.quantiteChoisie = quantiteProduit;
 });
+
+//-------------------------------------------------------------------------
+//Gérer l'ajout de produit au panier
+//-------------------------------------------------------------------------
+
+let choixDeProduit = document.getElementById("addToCart");
+
+choixDeProduit.addEventListener("click", function () {
+  //on recupere l'ID, la valeur de la couleur choisie, la valeur de la quantite dans l'API
+  let couleurChoisie = listOfColor.value;
+  let quantiteChoisie = listeQuantite.valueAsNumber;
+  let update = 0;
+  if (!couleurChoisie || !quantiteChoisie) {
+    alert("veuillez choisir une couleur et une quantité supérieur à 0 !");
+  } else if (quantiteChoisie < 0 || quantiteChoisie > 100) {
+    alert("veuillez choisir une quantité valide");
+  } else {
+    //Analyse une chaîne de caractères JSON et construit la valeur JavaScript décrit par cette chaîne
+    let panierEnCours = JSON.parse(localStorage.getItem("monPanier"));
+    if (panierEnCours) {
+      for (
+        let compteurProduit = 0;
+        compteurProduit < panierEnCours.length;
+        compteurProduit++
+      ) {
+        //pas d'ajout de ligne dans le tableau, article déjà existant (quantité modifiée)
+        if (panierEnCours[compteurProduit].productId == productId) {
+          if (panierEnCours[compteurProduit].couleurChoisie == couleurChoisie) {
+            panierEnCours[compteurProduit].quantiteChoisie += quantiteChoisie;
+            update = 1;
+          }
+        }
+      }
+      //ajout dans le tableau de l'article avec les values choisies par le user
+      if (update == 0) {
+        panierEnCours.push({ productId, couleurChoisie, quantiteChoisie });
+        console.log(
+          "un produit différent a été ajouté au panier déjà existant"
+        );
+        console.log(panierEnCours);
+      }
+      // aucun article dans le panier, création d'un nouveau tableau
+    } else {
+      panierEnCours = [{ productId, couleurChoisie, quantiteChoisie }];
+      console.log("un nouveau tableau a été crée");
+      console.log(panierEnCours);
+    }
+    //enregistrer le panier
+    //convertit la valeur JavaScript en chaîne JSON
+    //pour etre envoyé dans la key "monPanier" du localStorage
+    localStorage.setItem("monPanier", JSON.stringify(panierEnCours));
+    alert("Produit ajouté au panier");
+  }
+});
