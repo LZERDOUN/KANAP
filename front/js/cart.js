@@ -392,6 +392,6 @@ const validEmail = function (inputEmail) {
 
 function RedirectionPageConfirmation(orderId) {
   document.location.href =
-    "http://127.0.0.1:5500/front/html/confirmation.html?orderId=" + orderId;
+    "http://127.0.0.1:5501/front/html/confirmation.html?orderId=" + orderId;
   localStorage.clear();
 }
