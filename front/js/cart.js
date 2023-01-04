@@ -312,7 +312,7 @@ formulaire.addEventListener("submit", function (e) {
 });
 
 //Création des expressions régulières pour la validation des champs du formulaire
-let lettersOnlyRegExp = new RegExp("[A-Za-zÀ-ÖØ-öø-ÿ-]{2,25}");
+let lettersOnlyRegExp = new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ-]{2,25}$");
 let addressRegExp = new RegExp("[A-Za-zÀ-ÖØ-öø-ÿ0-9.,'-]{2,50}");
 let emailRegExp = new RegExp(
   "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
