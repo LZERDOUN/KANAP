@@ -50,6 +50,97 @@ function calculateTotalArticles(CART_MAP) {
   return articleTotal;
 }
 
+function updateLocalStorage(cartUpdated) {
+  localStorage.setItem("monPanier", JSON.stringify(cartUpdated));
+  console.log(cartUpdated);
+}
+
+async function readingCart(CART_MAP) {
+  //Variable additionalInfos : Récupérer informations API
+  const allProducts = await getAllProducts();
+  /*Variable cartLocalStorage : Récupérer articles dans le panier
+    JSON.parse -> convertis l'objet JSON suivant en JS 
+    localStorage.getItem -> va dans localstorage et lis l'item ("mon panier"))*/
+  let cartLocalStorage = JSON.parse(localStorage.getItem("monPanier"));
+
+  if (cartLocalStorage && cartLocalStorage.length >= 1) {
+    console.log("le panier a trouvé un objet dans le localStorage");
+    let sectionPanier = document.getElementById("cart__items");
+
+    //Boucle qui récupère informations des produits du panier et les affiche
+    for (let i = 0; i < cartLocalStorage.length; i++) {
+      const article = cartLocalStorage[i];
+      const articleInfo = filterByID(article, allProducts);
+
+      CART_MAP[article.productId + article.couleurChoisie] = {
+        ...article,
+        ...articleInfo,
+      };
+      sectionPanier.insertAdjacentHTML(
+        "afterbegin",
+        `
+                <article class="cart__item" data-id="${article.productId}" data-color="${article.couleurChoisie}">
+                    <div class="cart__item__img">
+                        <img src=${articleInfo.imageUrl} alt=${articleInfo.altText}>
+                    </div>
+                    <div class="cart__item__content">
+                        <div class="cart__item__content__description">
+                            <h2>${articleInfo.name}</h2>
+                            <p>${article.couleurChoisie}</p>
+                            <p>${articleInfo.price}</p>
+                        </div>
+                        <div class="cart__item__content__settings">
+                            <div class="cart__item__content__settings__quantity">
+                                <p>Qté : ${article.quantiteChoisie}</p>
+                                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${article.quantiteChoisie}>
+                            </div>
+                            <div class="cart__item__content__settings__delete">
+                                <p class="deleteItem">Supprimer</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `
+      );
+      console.log("produits ajoutés!");
+
+      const productInput = document.getElementsByClassName("itemQuantity")[0];
+      CART_MAP[article.productId + article.couleurChoisie] = {
+        ...CART_MAP[article.productId + article.couleurChoisie],
+        inputValue: productInput.valueAsNumber,
+      };
+      //AFFICHAGE TOTAL D'ARTICLES PANIER
+      const articleTotal = calculateTotalArticles(CART_MAP);
+
+      let articlesPanier = document.getElementById("totalQuantity");
+      articlesPanier.textContent = `${articleTotal}`;
+
+      //AFFICHAGE PRIX TOTAL PANIER
+      const prixTotal = calculateCartTotal(CART_MAP);
+
+      let prixPanier = document.getElementById("totalPrice");
+      prixPanier.textContent = `${prixTotal}`;
+    }
+  } else {
+    //PANIER VIDE
+    let sectionPanier = document.getElementById("cart__items");
+    sectionPanier.insertAdjacentHTML(
+      "afterbegin",
+      `<p> Votre panier est vide. </p>`
+    );
+
+    console.log("votre panier est vide");
+    //faire apparaitre le nombre 0 dans totalqty et prixTotal dans le panier
+    let spanTotalQty = document.getElementById("totalQuantity");
+    spanTotalQty.textContent = "0";
+    let spanTotalPrice = document.getElementById("totalPrice");
+    spanTotalPrice.textContent = "0";
+    //Faire disparaître le formulaire
+    let formulaire = document.getElementsByClassName("cart__order");
+    formulaire[0].remove();
+  }
+}
+
 //--------------------------------------------------------------------------------------
 //Affichage du panier et modifications possibles sur quantité ou suppression article
 //--------------------------------------------------------------------------------------
