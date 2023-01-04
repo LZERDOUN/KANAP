@@ -50,13 +50,19 @@ function calculateTotalArticles(CART_MAP) {
   return articleTotal;
 }
 
+//--------------------------------------------------------------------------------------
+//Fonction updateLocalStorage pour mettre à jour le localStorage
+//--------------------------------------------------------------------------------------
 function updateLocalStorage(cartUpdated) {
   localStorage.setItem("monPanier", JSON.stringify(cartUpdated));
   console.log(cartUpdated);
 }
 
+//--------------------------------------------------------------------------------------
+//Fonction readingCart pour lire le panier en cours et affichage du panier
+//--------------------------------------------------------------------------------------
 async function readingCart(CART_MAP) {
-  //Variable additionalInfos : Récupérer informations API
+  //Récupérer informations API
   const allProducts = await getAllProducts();
   /*Variable cartLocalStorage : Récupérer articles dans le panier
     JSON.parse -> convertis l'objet JSON suivant en JS 
@@ -142,7 +148,7 @@ async function readingCart(CART_MAP) {
 }
 
 //--------------------------------------------------------------------------------------
-//Affichage du panier et modifications possibles sur quantité ou suppression article
+//Modifications possibles sur quantité ou suppression article
 //--------------------------------------------------------------------------------------
 async function getCartPage() {
   const CART_MAP = {};
