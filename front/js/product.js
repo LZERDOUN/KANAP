@@ -73,7 +73,7 @@ choixDeProduit.addEventListener("click", function () {
   let quantiteChoisie = listeQuantite.valueAsNumber;
   let update = 0;
   if (!couleurChoisie || !quantiteChoisie) {
-    alert("veuillez choisir une couleur et une quantité supérieur à 0 !");
+    alert("veuillez choisir une couleur et/ou une quantité supérieur à 0 !");
   } else if (quantiteChoisie < 0 || quantiteChoisie > 100) {
     alert("veuillez choisir une quantité valide");
   } else {
